@@ -20,8 +20,8 @@ from blog.views import RegisterView, RegisterDoneView
 
 urlpatterns = [
     url(r'^blog/', include('blog.urls')),
-    url(r'accounts/login/$', auth_views.login),
-    url(r'accounts/logout/$', auth_views.logout),
+    url(r'accounts/login/$', auth_views.login, name='login'),
+    url(r'accounts/logout/$', auth_views.logout, name='logout'),
     url(r'^accounts/register/$', RegisterView.as_view(), name='register'),
     url(r'^accounts/register/done/$', RegisterDoneView.as_view(), name='register_done'),
     url(r'^admin/', admin.site.urls),
