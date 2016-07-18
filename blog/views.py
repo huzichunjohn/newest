@@ -1,11 +1,16 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import View
+from django.views.generic import View, FormView
 from django.views.generic.base import TemplateView
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from django.template.loader import get_template, render_to_string
+from django.template import Context
+from django.core.mail import EmailMessage
 from .models import Blog
+from .forms import ContactForm
 
 class GreetingView(LoginRequiredMixin, View):
     login_url = '/accounts/login/'
@@ -42,3 +47,42 @@ class BlogView(LoginRequiredMixin, TemplateView):
 	context = super(BlogView, self).get_context_data(**kwargs)
 	context['latest_blogs'] = Blog.objects.all()[:5]
 	return context 
+
+class AboutView(TemplateView):
+    template_name = 'about.html'
+
+    def get_context_data(self, **kwargs):
+	context = super(AboutView, self).get_context_data(**kwargs)
+        now = timezone.localtime(timezone.now())
+	if now.weekday() < 5 and 8 < now.hour < 18:
+	    context['open'] = True
+	else:
+	    context['open'] = False
+	return context
+
+class ContactView(FormView):
+    form_class = ContactForm
+    template_name = 'contact.html'
+    success_url = reverse_lazy('contact')
+
+    def form_valid(self, form):
+	contact_name = form.cleaned_data['contact_name']
+	contact_email = form.cleaned_data['contact_email']
+	form_content = form.cleaned_data['content']
+	
+	context = {
+	    'contact_name': contact_name,
+	    'contact_email': contact_email,
+	    'form_content': form_content
+	}
+	content = render_to_string('contact_template.txt', context)
+	
+	email = EmailMessage(
+	    'new contact',
+	    content,
+	    from_email='Dont reply<do_not_reply@domain.com>',
+	    to=['to_email'],
+	    headers = {'Reply-To': contact_email}
+	)
+	email.send()
+	return super(ContactView, self).form_valid(form)
