@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}author delete{% endblock %}
+
+{% block content %}
+  <form action="" method="POST">
+    {% csrf_token %}
+    <p><label>name:</label>{{ object.id }}</p>
+    <p><label>last accessed:</label>{{ object.last_accessed }}</p>
+    <input type="submit" value="Delete">
+  </form>
+{% endblock %}

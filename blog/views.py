@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import View, FormView, DetailView, ListView
+from django.views.generic import View, FormView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
@@ -10,7 +10,7 @@ from django.template.loader import get_template, render_to_string
 from django.template import Context
 from django.core.mail import EmailMessage
 from .models import Blog, Author
-from .forms import ContactForm
+from .forms import ContactForm, AuthorForm
 
 class GreetingView(LoginRequiredMixin, View):
     login_url = '/accounts/login/'
@@ -101,3 +101,15 @@ class AuthorListView(ListView):
     context_object_name = 'authors'
     queryset = Author.objects.all()
     template_name = 'blog/list.html'
+
+class AuthorCreate(CreateView):
+    model = Author
+    form_class = AuthorForm
+
+class AuthorUpdate(UpdateView):
+    model = Author
+    form_class = AuthorForm
+
+class AuthorDelete(DeleteView):
+    model = Author
+    success_url = reverse_lazy('author-list')

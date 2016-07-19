@@ -1,4 +1,5 @@
 from django import forms
+from .models import Author
 
 class ContactForm(forms.Form):
     contact_name = forms.CharField(required=True)
@@ -13,3 +14,8 @@ class ContactForm(forms.Form):
 	self.fields['contact_name'].label = "your name:"
 	self.fields['contact_email'].label = "your email:"
 	self.fields['content'].label = "what do you want to say?"
+
+class AuthorForm(forms.ModelForm):
+    class Meta:
+	model = Author
+	fields = ['name', 'last_accessed']

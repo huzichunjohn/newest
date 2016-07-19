@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 class Blog(models.Model):
     title = models.CharField(max_length=100)
@@ -18,3 +19,6 @@ class Blog(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=200)
     last_accessed = models.DateTimeField()
+
+    def get_absolute_url(self):
+	return reverse('author-detail', kwargs={'pk': self.pk})
