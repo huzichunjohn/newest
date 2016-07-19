@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import View, FormView
+from django.views.generic import View, FormView, DetailView, ListView
 from django.views.generic.base import TemplateView
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.template.loader import get_template, render_to_string
 from django.template import Context
 from django.core.mail import EmailMessage
-from .models import Blog
+from .models import Blog, Author
 from .forms import ContactForm
 
 class GreetingView(LoginRequiredMixin, View):
@@ -86,3 +86,18 @@ class ContactView(FormView):
 	)
 	email.send()
 	return super(ContactView, self).form_valid(form)
+
+class AuthorDetailView(DetailView):
+    queryset = Author.objects.all()
+    template_name = 'blog/detail.html'
+
+    def get_object(self):
+	object = super(AuthorDetailView, self).get_object()
+	object.last_accessed = timezone.now()
+	object.save()
+	return object
+
+class AuthorListView(ListView):
+    context_object_name = 'authors'
+    queryset = Author.objects.all()
+    template_name = 'blog/list.html'

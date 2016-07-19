@@ -14,3 +14,7 @@ class Blog(models.Model):
 
     def __unicode__(self):
 	return u'%s %s' % (self.title, self.owner.username)
+
+class Author(models.Model):
+    name = models.CharField(max_length=200)
+    last_accessed = models.DateTimeField()

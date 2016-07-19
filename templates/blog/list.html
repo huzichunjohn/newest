@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}author list{% endblock %}
+
+{% block content %}
+{% for author in authors %}
+<p>{{ author.id}}--{{ author.name }}--{{ author.last_accessed }}</p>
+{% endfor %}
+{% endblock %}
