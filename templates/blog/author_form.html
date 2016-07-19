@@ -1,10 +1,50 @@
 {% extends 'base.html' %}
 {% block title %}author{% endblock %}
 
+{% block header %}
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script>
+    function ajax_test() {
+      $.ajax({
+	type: "POST",
+	url: "http://localhost:8000/blog/author/add/", 
+	data: get_post_data(),
+        dataType: "json",
+	beforeSend: function(xhr) {
+	  xhr.setRequestHeader("X-CSRFToken", get_csrf_token());
+	},
+	success: function(data) {
+	  console.log("the result: "+data);
+	}
+      }); 
+    }
+    
+    function get_csrf_token() {
+      return $('input[name="csrfmiddlewaretoken"]').val()
+    }
+
+    function get_post_data() {
+      console.log("get_post_data");
+      var name, created_by, last_accessed;
+      name = $("#id_name").val();
+      created_by = $("#id_created_by").val();
+      last_accessed = $("#id_last_accessed").val();
+      console.log("name:"+name+";created_by:"+created_by+";last_accessed:"+last_accessed);
+      return {
+	"name": name,
+	"created_by": created_by,
+	"last_accessed": last_accessed
+      }
+    }
+
+  </script>
+{% endblock %}
+
 {% block content %}
   <form action="" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit">
   </form>
+  <input id="ajax" type="button" value="ajax" onclick="ajax_test()">
 {% endblock %}

@@ -3,6 +3,6 @@
 
 {% block content %}
 {% for author in authors %}
-<p>{{ author.id}}--{{ author.name }}--{{ author.last_accessed }}</p>
+<p>{{ author.id}}--{{ author.name }}--{{ author.last_accessed }}--{{ author.created_by }}</p>
 {% endfor %}
 {% endblock %}

@@ -18,4 +18,4 @@ class ContactForm(forms.Form):
 class AuthorForm(forms.ModelForm):
     class Meta:
 	model = Author
-	fields = ['name', 'last_accessed']
+	fields = ['name', 'created_by', 'last_accessed']

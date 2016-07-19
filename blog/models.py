@@ -19,6 +19,7 @@ class Blog(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=200)
     last_accessed = models.DateTimeField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_absolute_url(self):
 	return reverse('author-detail', kwargs={'pk': self.pk})

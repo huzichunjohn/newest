@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import View, FormView, DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.contrib.auth.forms import UserCreationForm
@@ -102,9 +102,31 @@ class AuthorListView(ListView):
     queryset = Author.objects.all()
     template_name = 'blog/list.html'
 
-class AuthorCreate(CreateView):
+class AjaxableResponseMixin(object):
+    def form_invalid(self, form):
+	response = super(AjaxableResponseMixin, self).form_invalid(form)
+	if self.request.is_ajax():
+	    return JsonResponse(form.errors, status=400)
+	else:
+	    return response
+
+    def form_valid(self, form):
+	response = super(AjaxableResponseMixin, self).form_valid(form)
+	if self.request.is_ajax():
+	    data = {
+		'pk': self.object.pk,
+	    }
+	    return JsonResponse(data)
+	else:
+	    return response
+
+class AuthorCreate(AjaxableResponseMixin, CreateView):
     model = Author
     form_class = AuthorForm
+
+    def form_valid(self, form):
+	form.instance.created_by = self.request.user
+	return super(AuthorCreate,self).form_valid(form)
 
 class AuthorUpdate(UpdateView):
     model = Author
