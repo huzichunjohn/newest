@@ -4,15 +4,23 @@
 {% block header %}
   <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script>
+    $.ajaxSetup({
+      data: {
+	csrfmiddlewaretoken: '{{ csrf_token }}',
+      }
+    });
+
     function ajax_test() {
       $.ajax({
 	type: "POST",
 	url: "http://localhost:8000/blog/author/add/", 
 	data: get_post_data(),
         dataType: "json",
+        /*
 	beforeSend: function(xhr) {
 	  xhr.setRequestHeader("X-CSRFToken", get_csrf_token());
 	},
+	*/
 	success: function(data) {
 	  console.log("the result: "+data);
 	}
