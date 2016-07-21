@@ -3,6 +3,7 @@ from subprocess import Popen, STDOUT, PIPE
 import shlex, os
 
 class Command(BaseCommand):
+    help = "remove all the *.pyc files."
     def handle(self, *args, **options):
 	os.system("rm `find . -type f -name '*.pyc'`")
 	
@@ -14,6 +15,4 @@ class Command(BaseCommand):
 	    self.stdout.write("all *.pyc files were successfully cleaned up!\n")
 	else:
 	    self.stdout.write("whoops! something went wrong!\n")
-
-
 
