@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'blog',
+    'dns',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -176,3 +177,6 @@ LOGGING = {
         },
     },
 }
+
+#import sys
+#print sys.getdefaultencoding()

@@ -1,0 +1,6 @@
+{% for address in addresses %}
+    {{ address.name|ljust:"20" }} {{ address.rdtype }} {{ address.ip }}
+{% endfor %}
+{% for cname in cnames %}
+    {{ cname.name|ljust:"20" }} {{ cname.rdtype }} {{ cname.cname }}
+{% endfor %}
