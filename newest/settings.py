@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'blog',
     'dns',
+    'raven.contrib.django.raven_compat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -157,26 +158,58 @@ AUTH_LDAP_REQUIRE_GROUP = "cn=admin,ou=groups,dc=example,dc=com"
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['sentry'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
     'handlers': {
+        'sentry': {
+            'level': 'DEBUG',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'tags': {'custom-tag': 'x'},
+        },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/tmp/django/debug.log',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
         },
 	'console': {
-	    'level': 'INFO',
+	    'level': 'DEBUG',
 	    'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
 	},
     },
     'loggers': {
-        'django': {
-            'handlers': ['file', 'console'],
-            'level': 'DEBUG',
-            'propagate': True,
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
         },
+        'raven': {
+           'level': 'DEBUG',
+           'handlers': ['console'],
+           'propagates': False,
+       },
+       'sentry.errors': {
+           'level': 'DEBUG',
+           'handlers': ['console'],
+           'propagates': False,
+       },
     },
 }
 
 #import sys
 #print sys.getdefaultencoding()
+
+import raven
+RAVEN_CONFIG = {
+    'dsn': 'https://f436f402e0a6468b83e6e80d8bce84e7:22a7274d7f554cd1a16a62dce27cfa6b@app.getsentry.com/90104',
+    'release': raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
+}

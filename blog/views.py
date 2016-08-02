@@ -11,6 +11,8 @@ from django.template import Context
 from django.core.mail import EmailMessage
 from .models import Blog, Author
 from .forms import ContactForm, AuthorForm
+import logging
+logger = logging.getLogger(__name__)
 
 class GreetingView(LoginRequiredMixin, View):
     login_url = '/accounts/login/'
@@ -18,6 +20,7 @@ class GreetingView(LoginRequiredMixin, View):
     greeting = "Good Day"
 
     def get(self, request):
+        logger.warning("an error")
 	return HttpResponse(self.greeting)
 
 class RegisterView(View):
