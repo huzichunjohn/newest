@@ -158,10 +158,10 @@ AUTH_LDAP_REQUIRE_GROUP = "cn=admin,ou=groups,dc=example,dc=com"
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'root': {
         'level': 'WARNING',
-        'handlers': ['sentry'],
+        'handlers': ['sentry', 'file'],
     },
     'formatters': {
         'verbose': {
@@ -171,7 +171,7 @@ LOGGING = {
     },
     'handlers': {
         'sentry': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
             'tags': {'custom-tag': 'x'},
         },
