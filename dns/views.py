@@ -14,7 +14,6 @@ def preview(request, pk):
                 generated_content = record.render()
                 if generated_content:
                     content += generated_content
-                    content += "\n"
             content += "\n"
     return HttpResponse(content, content_type='text/plain')
 
