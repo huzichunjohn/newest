@@ -35,6 +35,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'blog',
     'dns',
+    'rest_framework',
+    'rest_framework.authtoken',
     'raven.contrib.django.raven_compat',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -212,4 +214,11 @@ import raven
 RAVEN_CONFIG = {
     'dsn': 'https://f436f402e0a6468b83e6e80d8bce84e7:22a7274d7f554cd1a16a62dce27cfa6b@app.getsentry.com/90104',
     'release': raven.fetch_git_sha(os.path.dirname(os.path.dirname(__file__))),
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
